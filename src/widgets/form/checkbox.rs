@@ -17,6 +17,10 @@ pub fn get_css<'a>() -> &'a str {
     --state-color: var(--positive-color);
 }
 
+.jinya-checkbox__color-container--disabled {
+    --state-color: var(--disabled-border-color);
+}
+
 .jinya-checkbox__container {
 }
 
@@ -63,6 +67,10 @@ pub fn get_css<'a>() -> &'a str {
     background: var(--input-background-color);
 }
 
+.jinya-checkbox__label:disabled:hover::before {
+    background: var(--white);
+}
+
 .jinya-checkbox__label::after {
     position: absolute;
     top: 4px;
@@ -100,6 +108,7 @@ pub struct Checkbox {
     state: CheckboxState,
     validation_message: String,
     checked: bool,
+    disabled: bool,
 }
 
 #[derive(Clone, PartialEq, Properties)]
@@ -111,6 +120,8 @@ pub struct CheckboxProps {
     #[prop_or("".to_string())]
     pub validation_message: String,
     pub checked: bool,
+    #[prop_or(false)]
+    pub disabled: bool,
 }
 
 pub enum Msg {
@@ -125,11 +136,17 @@ impl Default for CheckboxState {
 
 impl Checkbox {
     fn get_checkbox_container_class(&self) -> String {
-        match self.state {
+        let class = match self.state {
             CheckboxState::Default => "jinya-checkbox__color-container--default",
             CheckboxState::Negative => "jinya-checkbox__color-container--negative",
             CheckboxState::Positive => "jinya-checkbox__color-container--positive",
-        }.to_string()
+        }.to_string();
+
+        if self.disabled {
+            "jinya-checkbox__color-container--disabled".to_string()
+        } else {
+            class
+        }
     }
 }
 
@@ -145,6 +162,7 @@ impl Component for Checkbox {
             validation_message: props.validation_message,
             on_change: props.on_change,
             checked: props.checked,
+            disabled: props.disabled,
         }
     }
 
@@ -164,6 +182,7 @@ impl Component for Checkbox {
         self.validation_message = _props.validation_message;
         self.on_change = _props.on_change;
         self.checked = _props.checked;
+        self.disabled = _props.disabled;
 
         true
     }
@@ -178,6 +197,7 @@ impl Component for Checkbox {
                         type="checkbox"
                         onchange=self.link.callback(|_| Msg::Change)
                         checked=self.checked
+                        disabled=self.disabled
                         class="jinya-checkbox__input"
                     />
                     <label for=id class="jinya-checkbox__label">{&self.label}</label>

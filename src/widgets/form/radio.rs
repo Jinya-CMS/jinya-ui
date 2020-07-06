@@ -17,7 +17,8 @@ pub fn get_css<'a>() -> &'a str {
     --state-color: var(--positive-color);
 }
 
-.jinya-radio__container {
+.jinya-radio__color-container--disabled {
+    --state-color: var(--disabled-border-color);
 }
 
 .jinya-radio__input {
@@ -102,6 +103,7 @@ pub struct Radio {
     checked: bool,
     group: String,
     value: String,
+    disabled: bool,
 }
 
 #[derive(Clone, PartialEq, Properties)]
@@ -115,6 +117,8 @@ pub struct RadioProps {
     pub checked: bool,
     pub group: String,
     pub value: String,
+    #[prop_or(false)]
+    pub disabled: bool,
 }
 
 pub enum Msg {
@@ -129,11 +133,17 @@ impl Default for RadioState {
 
 impl Radio {
     fn get_radio_container_class(&self) -> String {
-        match self.state {
+        let class = match self.state {
             RadioState::Default => "jinya-radio__color-container--default",
             RadioState::Negative => "jinya-radio__color-container--negative",
             RadioState::Positive => "jinya-radio__color-container--positive",
-        }.to_string()
+        }.to_string();
+
+        if self.disabled {
+            "jinya-radio__color-container--disabled".to_string()
+        } else {
+            class
+        }
     }
 }
 
@@ -151,6 +161,7 @@ impl Component for Radio {
             checked: props.checked,
             group: props.group,
             value: props.value,
+            disabled: props.disabled,
         }
     }
 
@@ -172,6 +183,7 @@ impl Component for Radio {
         self.checked = _props.checked;
         self.group = _props.group;
         self.value = _props.value;
+        self.disabled = _props.disabled;
 
         true
     }
@@ -189,6 +201,7 @@ impl Component for Radio {
                         name=&self.group
                         class="jinya-radio__input"
                         value=&self.value
+                        disabled=self.disabled
                     />
                     <label for=id class="jinya-radio__label">{&self.label}</label>
                 </div>

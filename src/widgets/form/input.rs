@@ -17,6 +17,10 @@ pub fn get_css<'a>() -> &'a str {
     --state-color: var(--positive-color);
 }
 
+.jinya-input__color-container--disabled {
+    --state-color: var(--disabled-border-color);
+}
+
 .jinya-input__container {
     display: inline-block;
     border: 2px solid var(--state-color);
@@ -34,6 +38,10 @@ pub fn get_css<'a>() -> &'a str {
     border: none;
     padding: 0;
     width: 100%;
+}
+
+.jinya-input__input:disabled {
+    cursor: not-allowed;
 }
 
 .jinya-input__input:invalid {
@@ -80,6 +88,7 @@ pub struct Input {
     input_type: String,
     validation_message: String,
     placeholder: String,
+    disabled: bool,
 }
 
 #[derive(Clone, PartialEq, Properties)]
@@ -95,6 +104,8 @@ pub struct InputProps {
     pub validation_message: String,
     #[prop_or("".to_string())]
     pub placeholder: String,
+    #[prop_or(false)]
+    pub disabled: bool,
 }
 
 pub enum Msg {
@@ -109,11 +120,17 @@ impl Default for InputState {
 
 impl Input {
     fn get_input_container_class(&self) -> String {
-        match self.state {
+        let class = match self.state {
             InputState::Default => "jinya-input__color-container--default",
             InputState::Negative => "jinya-input__color-container--negative",
             InputState::Positive => "jinya-input__color-container--positive",
-        }.to_string()
+        }.to_string();
+
+        if self.disabled {
+            "jinya-input__color-container--disabled".to_string()
+        } else {
+            class
+        }
     }
 }
 
@@ -131,6 +148,7 @@ impl Component for Input {
             input_type: props.input_type,
             validation_message: props.validation_message,
             placeholder: props.placeholder,
+            disabled: props.disabled,
         }
     }
 
@@ -165,6 +183,7 @@ impl Component for Input {
                     <input
                         id=id
                         type=self.input_type
+                        disabled=self.disabled
                         placeholder=self.placeholder
                         oninput=self.link.callback(|e: InputData| Msg::Input(e.value))
                         value=self.value class="jinya-input__input"
