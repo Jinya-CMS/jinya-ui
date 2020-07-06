@@ -95,6 +95,7 @@ h3 {
         menu::item::get_css(),
         form::input::get_css(),
         form::checkbox::get_css(),
+        form::radio::get_css(),
     ];
     let doc = window().unwrap().document().unwrap();
     let style_element = doc.create_element("style").unwrap();
