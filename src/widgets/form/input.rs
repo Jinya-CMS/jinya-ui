@@ -79,6 +79,7 @@ pub struct Input {
     value: String,
     input_type: String,
     validation_message: String,
+    placeholder: String,
 }
 
 #[derive(Clone, PartialEq, Properties)]
@@ -92,6 +93,8 @@ pub struct InputProps {
     pub input_type: String,
     #[prop_or("".to_string())]
     pub validation_message: String,
+    #[prop_or("".to_string())]
+    pub placeholder: String,
 }
 
 pub enum Msg {
@@ -127,6 +130,7 @@ impl Component for Input {
             value: props.value,
             input_type: props.input_type,
             validation_message: props.validation_message,
+            placeholder: props.placeholder,
         }
     }
 
@@ -147,6 +151,7 @@ impl Component for Input {
         self.value = _props.value;
         self.validation_message = _props.validation_message;
         self.input_type = _props.input_type;
+        self.placeholder = _props.placeholder;
 
         true
     }
@@ -160,6 +165,7 @@ impl Component for Input {
                     <input
                         id=id
                         type=self.input_type
+                        placeholder=self.placeholder
                         oninput=self.link.callback(|e: InputData| Msg::Input(e.value))
                         value=self.value class="jinya-input__input"
                     />
