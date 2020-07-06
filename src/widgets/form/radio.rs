@@ -1,4 +1,3 @@
-use js_sys::*;
 use yew::{Callback, Component, ComponentLink, Html};
 use yew::prelude::*;
 
