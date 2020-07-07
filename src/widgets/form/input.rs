@@ -169,6 +169,7 @@ impl Component for Input {
         self.validation_message = _props.validation_message;
         self.input_type = _props.input_type;
         self.placeholder = _props.placeholder;
+        self.disabled = _props.disabled;
 
         true
     }

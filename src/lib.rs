@@ -13,6 +13,7 @@ pub fn init() {
     // language=CSS
     let root_css = "
 @import url(\"https://use.typekit.net/jmo2xoh.css\");
+@import url(\"https://cdn.materialdesignicons.com/5.3.45/css/materialdesignicons.min.css\");
 
 :root {
     font-size: 16px;
@@ -107,6 +108,7 @@ h3 {
         form::checkbox::get_css(),
         form::radio::get_css(),
         form::dropdown::get_css(),
+        form::multi_select::get_css(),
     ];
     let doc = window().unwrap().document().unwrap();
     let style_element = doc.create_element("style").unwrap();
