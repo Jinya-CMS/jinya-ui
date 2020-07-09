@@ -3,8 +3,6 @@ use yew::html::ChildrenRenderer;
 use yew::prelude::*;
 use yew::virtual_dom::VNode;
 
-use crate::widgets::menu::item::MenuItem;
-
 pub fn get_css<'a>() -> &'a str {
     // language=CSS
     "
@@ -33,7 +31,6 @@ pub fn get_css<'a>() -> &'a str {
 }
 
 pub struct MenuBar {
-    link: ComponentLink<Self>,
     children: ChildrenRenderer<VNode>,
     title: &'static str,
 }
@@ -48,15 +45,14 @@ impl Component for MenuBar {
     type Message = ();
     type Properties = MenuBarProps;
 
-    fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
+    fn create(props: Self::Properties, _link: ComponentLink<Self>) -> Self {
         MenuBar {
-            link,
             title: props.title,
             children: props.children,
         }
     }
 
-    fn update(&mut self, msg: Self::Message) -> bool {
+    fn update(&mut self, _msg: Self::Message) -> bool {
         false
     }
 

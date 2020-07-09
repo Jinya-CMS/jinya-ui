@@ -14,7 +14,6 @@ pub fn get_css<'a>() -> &'a str {
 }
 
 pub struct Page {
-    link: ComponentLink<Self>,
     children: ChildrenRenderer<VNode>,
 }
 
@@ -27,14 +26,13 @@ impl Component for Page {
     type Message = ();
     type Properties = PageProps;
 
-    fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
+    fn create(props: Self::Properties, _link: ComponentLink<Self>) -> Self {
         Page {
-            link,
             children: props.children,
         }
     }
 
-    fn update(&mut self, msg: Self::Message) -> bool {
+    fn update(&mut self, _msg: Self::Message) -> bool {
         false
     }
 

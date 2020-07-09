@@ -1,8 +1,8 @@
-use wasm_bindgen::__rt::core::iter::{Filter, Map};
-use wasm_bindgen::__rt::core::slice::Iter;
+use std::rc::Rc;
+
 use yew::{Callback, Component, ComponentLink, Html};
 use yew::prelude::*;
-use std::borrow::Borrow;
+use yew::services::ConsoleService;
 
 pub fn get_css<'a>() -> &'a str {
     // language=CSS
@@ -43,6 +43,7 @@ pub fn get_css<'a>() -> &'a str {
     display: flex;
     gap: 0.5rem;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .jinya-multi-select__item-holder:disabled {
@@ -95,7 +96,135 @@ pub fn get_css<'a>() -> &'a str {
     color: var(--state-color);
     font-family: var(--font-family);
 }
+
+.jinya-multi-select__dropdown {
+    position: absolute;
+    display: none;
+    width: calc(100% - 10px);
+    background: var(--white);
+    border: 2px solid var(--state-color);
+    left: 2px;
+    top: 2.25rem;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    max-height: 15rem;
+    overflow-y: auto;
+}
+
+.jinya-multi-select__search-field:focus + .jinya-multi-select__dropdown,
+.jinya-multi-select__dropdown--open {
+    display: block;
+}
+
+.jinya-multi-select__dropdown-item {
+    padding: 0.25rem 0.5rem;
+}
+
+.jinya-multi-select__dropdown-item:hover {
+    background: var(--input-background-color);
+    cursor: pointer;
+}
 "
+}
+
+struct Chip {
+    link: ComponentLink<Self>,
+    item: MultiSelectItem,
+    on_remove: Callback<MultiSelectItem>,
+}
+
+enum ChipMsg {
+    Remove,
+}
+
+#[derive(Clone, PartialEq, Properties)]
+struct ChipProps {
+    pub item: MultiSelectItem,
+    pub on_remove: Callback<MultiSelectItem>,
+}
+
+impl Component for Chip {
+    type Message = ChipMsg;
+    type Properties = ChipProps;
+
+    fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
+        Chip {
+            link,
+            item: props.item,
+            on_remove: props.on_remove,
+        }
+    }
+
+    fn update(&mut self, msg: Self::Message) -> bool {
+        match msg {
+            ChipMsg::Remove => self.on_remove.emit(self.item.clone())
+        }
+        true
+    }
+
+    fn change(&mut self, _props: Self::Properties) -> bool {
+        false
+    }
+
+    fn view(&self) -> Html {
+        html! {
+            <div class="jinya-multi-select__chip">
+                {&self.item.text}
+                <a href="#" class="mdi mdi-close" onclick=self.link.callback(|_| ChipMsg::Remove)></a>
+            </div>
+        }
+    }
+}
+
+struct DropdownItem {
+    link: ComponentLink<Self>,
+    item: MultiSelectItem,
+    on_select: Callback<MultiSelectItem>,
+}
+
+enum DropdownItemMsg {
+    Select,
+}
+
+#[derive(Clone, PartialEq, Properties)]
+struct DropdownItemProps {
+    pub item: MultiSelectItem,
+    pub on_select: Callback<MultiSelectItem>,
+}
+
+impl Component for DropdownItem {
+    type Message = DropdownItemMsg;
+    type Properties = DropdownItemProps;
+
+    fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
+        DropdownItem {
+            link,
+            item: props.item,
+            on_select: props.on_select,
+        }
+    }
+
+    fn update(&mut self, msg: Self::Message) -> bool {
+        match msg {
+            DropdownItemMsg::Select => {
+                ConsoleService::log("selected");
+                self.on_select.emit(self.item.clone());
+            }
+        }
+        true
+    }
+
+    fn change(&mut self, _props: Self::Properties) -> bool {
+        false
+    }
+
+    fn view(&self) -> Html {
+        html! {
+            <div class="jinya-multi-select__dropdown-item" onclick=self.link.callback(|_| DropdownItemMsg::Select)>
+                {&self.item.text}
+            </div>
+        }
+    }
 }
 
 #[derive(Clone, PartialEq)]
@@ -108,23 +237,25 @@ pub enum MultiSelectState {
 pub struct MultiSelect {
     link: ComponentLink<Self>,
     label: String,
-    on_select: Callback<String>,
-    on_deselect: Callback<String>,
+    on_select: Callback<MultiSelectItem>,
+    on_deselect: Callback<MultiSelectItem>,
+    on_filter: Callback<String>,
     state: MultiSelectState,
     validation_message: String,
     placeholder: String,
     disabled: bool,
     options: Vec<MultiSelectItem>,
-    selected_items: Vec<String>,
+    selected_items: Vec<MultiSelectItem>,
+    flyout_open: bool,
 }
 
 #[derive(Clone, PartialEq, Properties)]
 pub struct MultiSelectProps {
     pub label: String,
+    pub on_select: Callback<MultiSelectItem>,
+    pub on_deselect: Callback<MultiSelectItem>,
     #[prop_or_default]
-    pub on_select: Callback<String>,
-    #[prop_or_default]
-    pub on_deselect: Callback<String>,
+    pub on_filter: Callback<String>,
     #[prop_or(MultiSelectState::Default)]
     pub state: MultiSelectState,
     #[prop_or("".to_string())]
@@ -134,12 +265,15 @@ pub struct MultiSelectProps {
     #[prop_or(false)]
     pub disabled: bool,
     pub options: Vec<MultiSelectItem>,
-    pub selected_items: Vec<String>,
+    pub selected_items: Vec<MultiSelectItem>,
 }
 
 pub enum Msg {
-    Select(String),
-    Remove(String),
+    Select(MultiSelectItem),
+    Remove(MultiSelectItem),
+    Filter(String),
+    CloseFlyout,
+    OpenFlyout,
 }
 
 impl Default for MultiSelectState {
@@ -152,74 +286,6 @@ impl Default for MultiSelectState {
 pub struct MultiSelectItem {
     pub value: String,
     pub text: String,
-}
-
-impl MultiSelect {
-    fn get_multi_select_container_class(&self) -> String {
-        let class = match self.state {
-            MultiSelectState::Default => "jinya-multi-select__color-container--default",
-            MultiSelectState::Negative => "jinya-multi-select__color-container--negative",
-            MultiSelectState::Positive => "jinya-multi-select__color-container--positive",
-        }.to_string();
-
-        if self.disabled {
-            "jinya-multi-select__color-container--disabled".to_string()
-        } else {
-            class
-        }
-    }
-}
-
-struct Chip {
-    link: ComponentLink<Self>,
-    value: String,
-    text: String,
-    on_remove: Callback<String>,
-}
-
-enum ChipMsg {
-    Remove,
-}
-
-#[derive(Clone, PartialEq, Properties)]
-struct ChipProps {
-    pub value: String,
-    pub text: String,
-    pub on_remove: Callback<String>,
-}
-
-impl Component for Chip {
-    type Message = ChipMsg;
-    type Properties = ChipProps;
-
-    fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
-        Chip {
-            link,
-            text: props.text,
-            value: props.value,
-            on_remove: props.on_remove,
-        }
-    }
-
-    fn update(&mut self, msg: Self::Message) -> bool {
-        match msg {
-            ChipMsg::Remove => self.on_remove.emit(self.value.to_string())
-        }
-        true
-    }
-
-    fn change(&mut self, _props: Self::Properties) -> bool {
-        false
-    }
-
-    fn view(&self) -> Html {
-        html! {
-            <div class="jinya-multi-select__chip">
-                {&self.text}
-                <a href="#" class="mdi mdi-close" onclick=self.link.callback(|_| ChipMsg::Remove)></a>
-            </div>
-        }
-    }
 }
 
 impl Component for MultiSelect {
@@ -238,20 +304,32 @@ impl Component for MultiSelect {
             disabled: props.disabled,
             options: props.options,
             selected_items: props.selected_items,
+            on_filter: props.on_filter,
+            flyout_open: false,
         }
     }
 
     fn update(&mut self, msg: Self::Message) -> bool {
         match msg {
             Msg::Select(value) => {
+                ConsoleService::log(format!("{} {}", value.text, value.value).as_str());
                 self.on_select.emit(value);
             }
             Msg::Remove(value) => {
                 self.on_deselect.emit(value);
             }
+            Msg::Filter(value) => {
+                self.on_filter.emit(value);
+            }
+            Msg::CloseFlyout => {
+                self.flyout_open = false;
+            }
+            Msg::OpenFlyout => {
+                self.flyout_open = true;
+            }
         }
 
-        false
+        true
     }
 
     fn change(&mut self, _props: Self::Properties) -> bool {
@@ -271,29 +349,68 @@ impl Component for MultiSelect {
     fn view(&self) -> Html {
         let id = super::super::super::id_generator::generate_id();
         html! {
-            <div class=self.get_multi_select_container_class()>
+            <div class=self.get_multi_select_container_class() onmouseleave=self.link.callback(|_| Msg::CloseFlyout)>
                 <div class="jinya-multi-select__container">
                     <label for=id class="jinya-multi-select__label">{&self.label}</label>
-                    <div
-                        id=id
-                        disabled=self.disabled
-                        placeholder=self.placeholder
-                        class="jinya-multi-select__item-holder"
-                    >
-                        {for self.options.iter().enumerate().map(|(_, mut item)| {
-                            if (self.selected_items.contains(&item.value)) {
-                                html! {
-                                    <Chip text=&item.text value=&item.value on_remove=self.link.callback(|value| Msg::Remove(value)) />
-                                }
-                            } else {
-                                html! {}
+                    <div disabled=self.disabled placeholder=self.placeholder class="jinya-multi-select__item-holder">
+                        {for self.selected_items.iter().enumerate().map(|(_, mut item)| {
+                            let key = Rc::new(format!("chip-{}", item.value));
+                            html! {
+                                <Chip key=key item=item on_remove=self.link.callback(|value| Msg::Remove(value)) />
                             }
                         })}
-                        <input class="jinya-multi-select__search-field" />
+                        <input
+                            id=id
+                            class="jinya-multi-select__search-field"
+                            oninput=self.link.callback(|e: InputData| Msg::Filter(e.value))
+                            onfocus=self.link.callback(|_| Msg::OpenFlyout)
+                            placeholder=self.get_placeholder()
+                        />
+                        <div class=self.get_flyout_class()>
+                            {for self.options.iter().enumerate().map(|(_, mut item)| {
+                                let key = Rc::new(format!("item-{}", item.value));
+                                html! {
+                                    <DropdownItem key=key item=item on_select=self.link.callback(|value| Msg::Select(value)) />
+                                }
+                            })}
+                        </div>
                     </div>
                 </div>
                 <span class="jinya-multi-select__validation-message">{&self.validation_message}</span>
             </div>
+        }
+    }
+}
+
+impl MultiSelect {
+    fn get_placeholder(&self) -> String {
+        let placeholder = &self.placeholder;
+        if self.selected_items.is_empty() {
+            placeholder.to_string()
+        } else {
+            "".to_string()
+        }
+    }
+
+    fn get_flyout_class(&self) -> String {
+        if self.flyout_open {
+            "jinya-multi-select__dropdown jinya-multi-select__dropdown--open".to_string()
+        } else {
+            "jinya-multi-select__dropdown".to_string()
+        }
+    }
+
+    fn get_multi_select_container_class(&self) -> String {
+        let class = match self.state {
+            MultiSelectState::Default => "jinya-multi-select__color-container--default",
+            MultiSelectState::Negative => "jinya-multi-select__color-container--negative",
+            MultiSelectState::Positive => "jinya-multi-select__color-container--positive",
+        }.to_string();
+
+        if self.disabled {
+            "jinya-multi-select__color-container--disabled".to_string()
+        } else {
+            class
         }
     }
 }

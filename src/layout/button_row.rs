@@ -1,7 +1,7 @@
 use yew::{Component, ComponentLink, Html};
 use yew::html::ChildrenRenderer;
 use yew::prelude::*;
-use yew::virtual_dom::{VComp, VNode};
+use yew::virtual_dom::{VNode};
 
 pub fn get_css<'a>() -> &'a str {
     // language=CSS
@@ -38,7 +38,6 @@ pub enum ButtonRowAlignment {
 }
 
 pub struct ButtonRow {
-    link: ComponentLink<Self>,
     children: ChildrenRenderer<VNode>,
     alignment: ButtonRowAlignment,
 }
@@ -63,15 +62,14 @@ impl Component for ButtonRow {
     type Message = ();
     type Properties = ButtonRowProps;
 
-    fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
+    fn create(props: Self::Properties, _link: ComponentLink<Self>) -> Self {
         ButtonRow {
-            link,
             children: props.children,
             alignment: props.alignment,
         }
     }
 
-    fn update(&mut self, msg: Self::Message) -> bool {
+    fn update(&mut self, _msg: Self::Message) -> bool {
         false
     }
 
