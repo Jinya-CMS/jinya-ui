@@ -31,5 +31,6 @@ version = "0.3.4"
 features = [
   'MouseEvent',
   'EventTarget',
-  'Event'
+  'Event',
+  'File',
 ]

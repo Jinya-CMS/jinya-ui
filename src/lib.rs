@@ -109,6 +109,7 @@ h3 {
         form::radio::get_css(),
         form::dropdown::get_css(),
         form::multi_select::get_css(),
+        form::file_upload::get_css(),
     ];
     let doc = window().unwrap().document().unwrap();
     let style_element = doc.create_element("style").unwrap();
