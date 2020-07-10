@@ -1,7 +1,7 @@
 use yew::{Callback, Component, ComponentLink, Html};
 use yew::prelude::*;
-use yew::services::reader::File;
 use yew::services::ConsoleService;
+use yew::services::reader::File;
 
 pub fn get_css<'a>() -> &'a str {
     // language=CSS
@@ -20,6 +20,12 @@ pub fn get_css<'a>() -> &'a str {
 
 .jinya-file-upload__color-container--disabled {
     --state-color: var(--disabled-border-color);
+}
+
+.jinya-file-upload__color-container--drag-over .jinya-file-upload__label,
+.jinya-file-upload__color-container--drag-over .jinya-file-upload__file-info,
+.jinya-file-upload__color-container--drag-over .jinya-file-upload__container {
+    background-color: var(--input-background-color);
 }
 
 .jinya-file-upload__color-container {
@@ -113,6 +119,8 @@ pub struct FileUpload {
     filename: String,
     disabled: bool,
     on_select: Callback<Vec<File>>,
+    is_drag_over: bool,
+    multiple: bool,
 }
 
 #[derive(Clone, PartialEq, Properties)]
@@ -126,6 +134,8 @@ pub struct FileUploadProps {
     pub placeholder: String,
     #[prop_or(false)]
     pub disabled: bool,
+    #[prop_or(false)]
+    pub multiple: bool,
     pub on_select: Callback<Vec<File>>,
     #[prop_or("".to_string())]
     pub filename: String,
@@ -133,6 +143,9 @@ pub struct FileUploadProps {
 
 pub enum Msg {
     Files(Vec<File>),
+    Drop(DragEvent),
+    DragOver(DragEvent),
+    DragExit,
 }
 
 impl Default for FileUploadState {
@@ -143,14 +156,18 @@ impl Default for FileUploadState {
 
 impl FileUpload {
     fn get_input_container_class(&self) -> String {
-        let class = match self.state {
-            FileUploadState::Default => "jinya-file-upload__color-container jinya-file-upload__color-container--default",
-            FileUploadState::Negative => "jinya-file-upload__color-container jinya-file-upload__color-container--negative",
-            FileUploadState::Positive => "jinya-file-upload__color-container jinya-file-upload__color-container--positive",
-        }.to_string();
-
-        if self.disabled {
+        let class = if self.disabled {
             "jinya-file-upload__color-container jinya-file-upload__color-container--disabled".to_string()
+        } else {
+            match self.state {
+                FileUploadState::Default => "jinya-file-upload__color-container jinya-file-upload__color-container--default",
+                FileUploadState::Negative => "jinya-file-upload__color-container jinya-file-upload__color-container--negative",
+                FileUploadState::Positive => "jinya-file-upload__color-container jinya-file-upload__color-container--positive",
+            }.to_string()
+        };
+
+        if self.is_drag_over {
+            format!("{} jinya-file-upload__color-container--drag-over", class)
         } else {
             class
         }
@@ -171,6 +188,8 @@ impl Component for FileUpload {
             disabled: props.disabled,
             on_select: props.on_select,
             filename: props.filename,
+            is_drag_over: false,
+            multiple: props.multiple,
         }
     }
 
@@ -179,8 +198,39 @@ impl Component for FileUpload {
             Msg::Files(value) => {
                 self.on_select.emit(value.clone());
                 if value.len() > 0 {
-                    self.filename = value.first().unwrap().name();
+                    self.filename = if self.multiple {
+                        let name = value.iter().map(|file| file.name()).collect::<Vec<String>>().join(", ");
+                        name
+                    } else {
+                        value.first().unwrap().name()
+                    }
                 }
+            }
+            Msg::Drop(event) => {
+                self.is_drag_over = false;
+                event.prevent_default();
+                event.stop_propagation();
+                let data_transfer = event.data_transfer().unwrap();
+                let files: Vec<File> = js_sys::try_iter(&data_transfer.files().unwrap()).unwrap().unwrap().map(|v| File::from(v.unwrap())).collect();
+                if files.len() > 0 {
+                    self.on_select.emit(files.clone());
+                    self.filename = if self.multiple {
+                        let name = files.iter().map(|file| file.name()).collect::<Vec<String>>().join(", ");
+                        name
+                    } else {
+                        files.first().unwrap().name()
+                    }
+                }
+            }
+            Msg::DragOver(event) => {
+                self.is_drag_over = true;
+                event.prevent_default();
+                event.stop_propagation();
+                let mut data_transfer = event.data_transfer().unwrap();
+                data_transfer.set_drop_effect("copy");
+            }
+            Msg::DragExit => {
+                self.is_drag_over = false;
             }
         }
 
@@ -200,7 +250,18 @@ impl Component for FileUpload {
     fn view(&self) -> Html {
         let id = super::super::super::id_generator::generate_id();
         html! {
-            <div class=self.get_input_container_class()>
+            <div
+                class=self.get_input_container_class()
+                ondrop=self.link.callback(move |event| {
+                    Msg::Drop(event)
+                })
+                ondragover=self.link.callback(move |event: DragEvent| {
+                    Msg::DragOver(event)
+                })
+                ondragexit=self.link.callback(|_| {
+                    Msg::DragExit
+                })
+            >
                 <div class="jinya-file-upload__container">
                     <label for=id class="jinya-file-upload__label">{&self.label}</label>
                     <input
@@ -209,6 +270,7 @@ impl Component for FileUpload {
                         disabled=self.disabled
                         placeholder=self.placeholder
                         class="jinya-file-upload__input"
+                        multiple=self.multiple
                         onchange=self.link.callback(move |value| {
                             let mut result = vec![];
                             if let ChangeData::Files(files) = value {
