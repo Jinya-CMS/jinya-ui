@@ -50,7 +50,6 @@ pub fn get_css<'a>() -> &'a str {
     --color-one: var(--information-color);
     --color-two: var(--white);
 }
-
 "
 }
 
