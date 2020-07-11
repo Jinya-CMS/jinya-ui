@@ -1,6 +1,5 @@
 use yew::{Callback, Component, ComponentLink, Html};
 use yew::prelude::*;
-use yew::services::ConsoleService;
 use yew::services::reader::File;
 
 pub fn get_css<'a>() -> &'a str {
@@ -226,7 +225,7 @@ impl Component for FileUpload {
                 self.is_drag_over = true;
                 event.prevent_default();
                 event.stop_propagation();
-                let mut data_transfer = event.data_transfer().unwrap();
+                let data_transfer = event.data_transfer().unwrap();
                 data_transfer.set_drop_effect("copy");
             }
             Msg::DragExit => {

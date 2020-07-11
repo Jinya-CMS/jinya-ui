@@ -1,6 +1,6 @@
 #![recursion_limit = "10240"]
 
-use web_sys::window;
+use web_sys::{window};
 
 use crate::layout::*;
 use crate::widgets::*;
@@ -8,6 +8,7 @@ use crate::widgets::*;
 mod id_generator;
 pub mod widgets;
 pub mod layout;
+pub mod listing;
 
 pub fn init() {
     // language=CSS
@@ -101,6 +102,7 @@ h3 {
         root_css,
         button::get_css(),
         button_row::get_css(),
+        floating_action_button::get_css(),
         page::get_css(),
         menu::bar::get_css(),
         menu::item::get_css(),
@@ -110,9 +112,15 @@ h3 {
         form::dropdown::get_css(),
         form::multi_select::get_css(),
         form::file_upload::get_css(),
+        listing::card::card_button_row::get_css(),
+        listing::card::card::get_css(),
+        listing::card::card_button::get_css(),
+        listing::card::card_header::get_css(),
+        listing::card::card_container::get_css(),
     ];
     let doc = window().unwrap().document().unwrap();
     let style_element = doc.create_element("style").unwrap();
     style_element.set_text_content(Some(&css.join("\n")));
-    doc.query_selector("head").unwrap().expect("Head not found").append_child(&style_element);
+
+    doc.query_selector("head").expect("Head not found").expect("Head not found").append_child(&style_element).unwrap();
 }
