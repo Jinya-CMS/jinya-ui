@@ -31,6 +31,7 @@ pub fn get_css<'a>() -> &'a str {
     position: relative;
     margin-top: 0.75rem;
     width: 100%;
+    box-sizing: border-box;
 }
 
 .jinya-multi-select__item-holder {

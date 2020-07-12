@@ -28,6 +28,7 @@ pub fn get_css<'a>() -> &'a str {
     position: relative;
     margin-top: 0.75rem;
     width: 100%;
+    box-sizing: border-box;
 }
 
 .jinya-input__input {

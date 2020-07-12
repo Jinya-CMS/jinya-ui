@@ -117,6 +117,7 @@ h3 {
         listing::card::card_button::get_css(),
         listing::card::card_header::get_css(),
         listing::card::card_container::get_css(),
+        dialog::utils::dialog::get_css(),
     ];
     let doc = window().unwrap().document().unwrap();
     let style_element = doc.create_element("style").unwrap();
