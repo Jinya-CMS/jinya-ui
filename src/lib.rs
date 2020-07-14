@@ -123,5 +123,7 @@ h3 {
     let style_element = doc.create_element("style").unwrap();
     style_element.set_text_content(Some(&css.join("\n")));
 
-    doc.query_selector("head").expect("Head not found").expect("Head not found").append_child(&style_element).unwrap();
+    doc.query_selector("head").expect("Head not found").expect("Head not found").append_child(&style_element).expect("Head not found");
+    let body = doc.query_selector("body").expect("Body not found").expect("Body not found");
+    body.append_child(&widgets::toast::toast_container()).expect("Body not found");
 }

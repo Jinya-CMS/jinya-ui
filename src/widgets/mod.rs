@@ -1,3 +1,4 @@
+pub mod toast;
 pub mod floating_action_button;
 pub mod button;
 pub mod menu;
