@@ -1,7 +1,7 @@
 use yew::{Callback, Children};
 use yew::prelude::*;
 
-use crate::button::*;
+use crate::widgets::button::*;
 
 pub fn get_css<'a>() -> &'a str {
     // language=CSS

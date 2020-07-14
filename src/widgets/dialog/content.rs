@@ -1,7 +1,7 @@
 use yew::Callback;
 use yew::prelude::*;
 
-use crate::dialog::utils::dialog::*;
+use crate::widgets::dialog::utils::dialog::*;
 
 pub struct ContentDialog {
     title: String,

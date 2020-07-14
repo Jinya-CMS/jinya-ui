@@ -4,29 +4,35 @@ use yew::prelude::*;
 pub fn get_css<'a>() -> &'a str {
     // language=CSS
     "
-.jinya-page {
-    margin-left: 10%;
-    margin-right: 10%;
-    margin-top: 1.5rem;
+.jinya-form {
+    width: 100%;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.jinya-form > div {
+    flex: 0 0 100%;
 }
 "
 }
 
-pub struct Page {
+pub struct Form {
     children: Children,
 }
 
 #[derive(Clone, PartialEq, Properties)]
-pub struct PageProps {
-    pub children: Children
+pub struct FormProps {
+    pub children: Children,
 }
 
-impl Component for Page {
+impl Component for Form {
     type Message = ();
-    type Properties = PageProps;
+    type Properties = FormProps;
 
     fn create(props: Self::Properties, _link: ComponentLink<Self>) -> Self {
-        Page {
+        Form {
             children: props.children,
         }
     }
@@ -42,7 +48,7 @@ impl Component for Page {
 
     fn view(&self) -> Html {
         html! {
-            <div class="jinya-page">
+            <div class="jinya-form">
                 {for self.children.iter().enumerate().map(|(_, mut child)| {
                     child
                 })}

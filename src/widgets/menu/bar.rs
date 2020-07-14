@@ -1,7 +1,5 @@
 use yew::{Component, ComponentLink, Html};
-use yew::html::ChildrenRenderer;
 use yew::prelude::*;
-use yew::virtual_dom::VNode;
 
 pub fn get_css<'a>() -> &'a str {
     // language=CSS
@@ -31,13 +29,13 @@ pub fn get_css<'a>() -> &'a str {
 }
 
 pub struct MenuBar {
-    children: ChildrenRenderer<VNode>,
+    children: Children,
     title: &'static str,
 }
 
 #[derive(Clone, PartialEq, Properties)]
 pub struct MenuBarProps {
-    pub children: ChildrenRenderer<VNode>,
+    pub children: Children,
     pub title: &'static str,
 }
 

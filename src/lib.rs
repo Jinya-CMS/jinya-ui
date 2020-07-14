@@ -2,9 +2,6 @@
 
 use web_sys::{window};
 
-use crate::layout::*;
-use crate::widgets::*;
-
 mod id_generator;
 pub mod widgets;
 pub mod layout;
@@ -100,24 +97,27 @@ h3 {
 ";
     let css = vec![
         root_css,
-        button::get_css(),
-        button_row::get_css(),
-        floating_action_button::get_css(),
-        page::get_css(),
-        menu::bar::get_css(),
-        menu::item::get_css(),
-        form::input::get_css(),
-        form::checkbox::get_css(),
-        form::radio::get_css(),
-        form::dropdown::get_css(),
-        form::multi_select::get_css(),
-        form::file_upload::get_css(),
-        listing::card::card_button_row::get_css(),
+        layout::button_row::get_css(),
+        layout::form::get_css(),
+        layout::page::get_css(),
+        layout::row::get_css(),
         listing::card::card::get_css(),
         listing::card::card_button::get_css(),
         listing::card::card_header::get_css(),
         listing::card::card_container::get_css(),
-        dialog::utils::dialog::get_css(),
+        widgets::alert::get_css(),
+        widgets::button::get_css(),
+        widgets::dialog::utils::dialog::get_css(),
+        widgets::floating_action_button::get_css(),
+        widgets::form::input::get_css(),
+        widgets::form::checkbox::get_css(),
+        widgets::form::radio::get_css(),
+        widgets::form::dropdown::get_css(),
+        widgets::form::multi_select::get_css(),
+        widgets::form::file_upload::get_css(),
+        widgets::menu::bar::get_css(),
+        widgets::menu::item::get_css(),
+        listing::card::card_button_row::get_css(),
     ];
     let doc = window().unwrap().document().unwrap();
     let style_element = doc.create_element("style").unwrap();

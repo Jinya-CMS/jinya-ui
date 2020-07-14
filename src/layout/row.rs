@@ -1,7 +1,5 @@
 use yew::{Component, ComponentLink, Html};
-use yew::html::ChildrenRenderer;
 use yew::prelude::*;
-use yew::virtual_dom::{VNode};
 
 pub fn get_css<'a>() -> &'a str {
     // language=CSS
@@ -11,6 +9,7 @@ pub fn get_css<'a>() -> &'a str {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     display: flex;
+    flex-wrap: wrap;
 }
 
 .jinya-row--align-end {
@@ -28,6 +27,10 @@ pub fn get_css<'a>() -> &'a str {
 .jinya-row--align-space-between {
     justify-content: space-between;
 }
+
+.jinya-row--align-stretch {
+    justify-content: stretch;
+}
 "
 }
 
@@ -37,16 +40,17 @@ pub enum RowAlignment {
     Start,
     SpaceBetween,
     Center,
+    Stretch,
 }
 
 pub struct Row {
-    children: ChildrenRenderer<VNode>,
+    children: Children,
     alignment: RowAlignment,
 }
 
 #[derive(Clone, PartialEq, Properties)]
 pub struct RowProps {
-    pub children: ChildrenRenderer<VNode>,
+    pub children: Children,
     #[prop_or(RowAlignment::Start)]
     pub alignment: RowAlignment,
 }
@@ -58,6 +62,7 @@ impl Row {
             RowAlignment::Start => "jinya-row jinya-row--align-start",
             RowAlignment::SpaceBetween => "jinya-row jinya-row--align-space-between",
             RowAlignment::Center => "jinya-row jinya-row--align-center",
+            RowAlignment::Stretch => "jinya-row jinya-row--align-stretch",
         }
     }
 }
