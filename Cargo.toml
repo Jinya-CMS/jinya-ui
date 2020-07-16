@@ -22,6 +22,7 @@ http = "0.2.1"
 anyhow = "1.0.31"
 js-sys = "0.3.41"
 uuid = { version = "0.8", features = ["serde", "v4", "wasm-bindgen"] }
+gloo-timers = "0.2.1"
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3"

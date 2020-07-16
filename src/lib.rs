@@ -103,6 +103,7 @@ h3 {
         layout::row::get_css(),
         listing::card::card::get_css(),
         listing::card::card_button::get_css(),
+        listing::card::card_button_row::get_css(),
         listing::card::card_header::get_css(),
         listing::card::card_container::get_css(),
         widgets::alert::get_css(),
@@ -117,7 +118,7 @@ h3 {
         widgets::form::file_upload::get_css(),
         widgets::menu::bar::get_css(),
         widgets::menu::item::get_css(),
-        listing::card::card_button_row::get_css(),
+        widgets::toast::get_css(),
     ];
     let doc = window().unwrap().document().unwrap();
     let style_element = doc.create_element("style").unwrap();
