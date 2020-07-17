@@ -106,6 +106,7 @@ h3 {
         listing::card::card_button_row::get_css(),
         listing::card::card_header::get_css(),
         listing::card::card_container::get_css(),
+        listing::table::get_css(),
         widgets::alert::get_css(),
         widgets::button::get_css(),
         widgets::dialog::utils::dialog::get_css(),
