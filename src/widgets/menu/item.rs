@@ -1,5 +1,5 @@
-use yew::{Component, ComponentLink, Html};
 use yew::prelude::*;
+use yew::{Component, ComponentLink, Html};
 use yew_router::{prelude::*, Switch};
 
 pub fn get_css<'a>() -> &'a str {
@@ -50,6 +50,7 @@ pub fn get_css<'a>() -> &'a str {
     font-weight: var(--font-weight-light);
     cursor: pointer;
     text-decoration: none;
+    white-space: pre;
 }
 
 .jinya-menu__group {

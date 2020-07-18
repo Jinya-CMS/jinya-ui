@@ -32,6 +32,11 @@ pub fn init() {
     --font-style-regular: 400;
     --font-style-bold: 700;
     --font-style-light: 300;
+
+    --font-weight-regular: 400;
+    --font-weight-bold: 700;
+    --font-weight-light: 300;
+
     --font-size-12: 12px;
     --font-size-16: 16px;
     --font-size-24: 24px;
@@ -119,6 +124,7 @@ h3 {
         widgets::menu::bar::get_css(),
         widgets::menu::item::get_css(),
         widgets::toast::get_css(),
+        widgets::tab::tab_control::get_css(),
     ];
     let doc = window().unwrap().document().unwrap();
 
