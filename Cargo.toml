@@ -35,5 +35,6 @@ features = [
   'Event',
   'File',
   'DragEvent',
-  'DataTransfer'
+  'DataTransfer',
+  'Element',
 ]

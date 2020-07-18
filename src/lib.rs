@@ -1,7 +1,8 @@
 #![recursion_limit = "10240"]
 
-use web_sys::{window};
+use web_sys::window;
 
+mod css_import;
 mod id_generator;
 pub mod widgets;
 pub mod layout;
@@ -10,9 +11,6 @@ pub mod listing;
 pub fn init() {
     // language=CSS
     let root_css = "
-@import url(\"https://use.typekit.net/jmo2xoh.css\");
-@import url(\"https://cdn.materialdesignicons.com/5.3.45/css/materialdesignicons.min.css\");
-
 :root {
     font-size: 16px;
 
@@ -122,10 +120,14 @@ h3 {
         widgets::toast::get_css(),
     ];
     let doc = window().unwrap().document().unwrap();
+
+    let head = doc.query_selector("head").expect("Head not found").expect("Head not found");
     let style_element = doc.create_element("style").unwrap();
     style_element.set_text_content(Some(&css.join("\n")));
+    head.append_child(&style_element).expect("Could not insert style tag");
+    head.append_child(&css_import::get_mdi(&doc)).expect("Could not insert link tag");
+    head.append_child(&css_import::get_typekit(&doc)).expect("Could not insert link tag");
 
-    doc.query_selector("head").expect("Head not found").expect("Head not found").append_child(&style_element).expect("Head not found");
     let body = doc.query_selector("body").expect("Body not found").expect("Body not found");
     body.append_child(&widgets::toast::toast_container()).expect("Body not found");
 }
