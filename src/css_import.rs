@@ -1,5 +1,5 @@
-use web_sys::Element;
 use web_sys::Document;
+use web_sys::Element;
 
 pub(crate) fn get_typekit(document: &Document) -> Element {
     let link_element = document.create_element("link").expect("Element could not be created");

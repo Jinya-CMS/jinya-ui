@@ -1,5 +1,5 @@
-use yew::{Callback, Component, ComponentLink, Html};
 use yew::prelude::*;
+use yew::{Callback, Component, ComponentLink, Html};
 
 pub fn get_css<'a>() -> &'a str {
     // language=CSS
@@ -43,6 +43,7 @@ pub fn get_css<'a>() -> &'a str {
     font-size: var(--font-size-16);
     color: var(--state-color);
     background: var(--white);
+    font-family: var(--font-family);
     border: none;
     padding: 0;
     width: 100%;
@@ -54,6 +55,7 @@ pub fn get_css<'a>() -> &'a str {
     background-repeat: no-repeat;
     background-position-x: right;
     background-position-y: center;
+    outline: none;
 }
 
 .jinya-dropdown__select:invalid {
@@ -142,7 +144,8 @@ impl Dropdown {
             DropdownState::Default => "jinya-dropdown__color-container--default",
             DropdownState::Negative => "jinya-dropdown__color-container--negative",
             DropdownState::Positive => "jinya-dropdown__color-container--positive",
-        }.to_string();
+        }
+        .to_string();
 
         if self.disabled {
             "jinya-dropdown__color-container--disabled".to_string()
@@ -175,7 +178,7 @@ impl Component for Dropdown {
             Msg::Change(data) => {
                 let value = match data {
                     ChangeData::Select(element) => element.value(),
-                    _ => unreachable!()
+                    _ => unreachable!(),
                 };
                 self.on_select.emit(value);
             }

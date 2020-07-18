@@ -1,5 +1,5 @@
-use yew::{Callback, Component, ComponentLink, Html};
 use yew::prelude::*;
+use yew::{Callback, Component, ComponentLink, Html};
 
 pub fn get_css<'a>() -> &'a str {
     // language=CSS
@@ -38,6 +38,8 @@ pub fn get_css<'a>() -> &'a str {
     border: none;
     padding: 0;
     width: 100%;
+    outline: none;
+    font-family: var(--font-family);
 }
 
 .jinya-input__input:disabled {
@@ -124,7 +126,8 @@ impl Input {
             InputState::Default => "jinya-input__color-container--default",
             InputState::Negative => "jinya-input__color-container--negative",
             InputState::Positive => "jinya-input__color-container--positive",
-        }.to_string();
+        }
+        .to_string();
 
         if self.disabled {
             "jinya-input__color-container--disabled".to_string()

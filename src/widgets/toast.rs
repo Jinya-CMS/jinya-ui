@@ -12,7 +12,6 @@ pub fn get_css<'a>() -> &'a str {
     right: 0;
     top: 4rem;
     position: fixed;
-    gap: 1rem;
     flex-flow: row wrap;
 }
 
@@ -27,6 +26,7 @@ pub fn get_css<'a>() -> &'a str {
     left: 20rem;
     transition: left 0.3s;
     background: var(--white);
+    margin-bottom: 1rem;
 }
 
 .jinya-toast::before {
@@ -85,12 +85,15 @@ fn toast(message: String, toast_type: ToastType) {
         toast.set_inner_html(message.as_str());
         toast.class_list().add_1("jinya-toast").unwrap();
 
-        toast.class_list().add_1(match toast_type {
-            ToastType::Primary => "jinya-toast--primary",
-            ToastType::Positive => "jinya-toast--positive",
-            ToastType::Negative => "jinya-toast--negative",
-            ToastType::Information => "jinya-toast--information",
-        }).unwrap();
+        toast
+            .class_list()
+            .add_1(match toast_type {
+                ToastType::Primary => "jinya-toast--primary",
+                ToastType::Positive => "jinya-toast--positive",
+                ToastType::Negative => "jinya-toast--negative",
+                ToastType::Information => "jinya-toast--information",
+            })
+            .unwrap();
 
         container.unwrap().unwrap().append_child(&toast).unwrap();
         Timeout::new(1, move || {
@@ -98,9 +101,10 @@ fn toast(message: String, toast_type: ToastType) {
 
             Timeout::new(5_000, move || {
                 toast.remove();
-            }).forget();
-        }).forget();
-
+            })
+            .forget();
+        })
+        .forget();
     }
 }
 

@@ -1,5 +1,5 @@
-use yew::{Component, ComponentLink, Html};
 use yew::prelude::*;
+use yew::{Component, ComponentLink, Html};
 
 pub fn get_css<'a>() -> &'a str {
     // language=CSS
@@ -46,6 +46,7 @@ pub fn get_css<'a>() -> &'a str {
     font-size: 1rem;
     color: var(--primary-color);
     font-family: var(--font-family);
+    outline: none;
 }
 
 .jinya-menu__search-button {
@@ -57,6 +58,7 @@ pub fn get_css<'a>() -> &'a str {
     background: none;
     border: none;
     cursor: pointer;
+    outline: none;
 }
 "
 }

@@ -1,8 +1,8 @@
 use std::rc::Rc;
 
-use yew::{Callback, Component, ComponentLink, Html};
 use yew::prelude::*;
 use yew::services::ConsoleService;
+use yew::{Callback, Component, ComponentLink, Html};
 
 pub fn get_css<'a>() -> &'a str {
     // language=CSS
@@ -42,7 +42,6 @@ pub fn get_css<'a>() -> &'a str {
     padding: 0;
     width: 100%;
     display: flex;
-    gap: 0.5rem;
     align-items: center;
     flex-wrap: wrap;
 }
@@ -86,6 +85,7 @@ pub fn get_css<'a>() -> &'a str {
     border-radius: 5px;
     line-height: var(--line-height-18);
     padding: 0 0.25rem;
+    margin-right: 0.5rem;
 }
 
 .jinya-multi-select__search-field {
@@ -96,6 +96,8 @@ pub fn get_css<'a>() -> &'a str {
     font-size: var(--font-size-16);
     color: var(--state-color);
     font-family: var(--font-family);
+    background: var(--white);
+    outline: none;
 }
 
 .jinya-multi-select__dropdown {
@@ -158,7 +160,7 @@ impl Component for Chip {
 
     fn update(&mut self, msg: Self::Message) -> bool {
         match msg {
-            ChipMsg::Remove => self.on_remove.emit(self.item.clone())
+            ChipMsg::Remove => self.on_remove.emit(self.item.clone()),
         }
         true
     }
@@ -406,7 +408,8 @@ impl MultiSelect {
             MultiSelectState::Default => "jinya-multi-select__color-container--default",
             MultiSelectState::Negative => "jinya-multi-select__color-container--negative",
             MultiSelectState::Positive => "jinya-multi-select__color-container--positive",
-        }.to_string();
+        }
+        .to_string();
 
         if self.disabled {
             "jinya-multi-select__color-container--disabled".to_string()
