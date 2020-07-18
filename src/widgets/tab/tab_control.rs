@@ -11,7 +11,6 @@ pub fn get_css<'a>() -> &'a str {
 
 .jinya-tab__link-list {
     display: flex;
-    gap: 1rem;
     background: var(--white);
     width: 100%;
     border-bottom: 2px solid var(--primary-color);
@@ -26,6 +25,7 @@ pub fn get_css<'a>() -> &'a str {
     opacity: 0.5;
     transition: opacity 0.3s;
     cursor: pointer;
+    margin-right: 1rem;
 }
 
 .jinya-tab__link--active {
