@@ -24,6 +24,9 @@ pub fn get_css<'a>() -> &'a str {
     display: flex;
     position: relative;
     padding: 0.5rem 0.5rem 0.5rem 2.75rem;
+    left: 20rem;
+    transition: left 0.3s;
+    background: var(--white);
 }
 
 .jinya-toast::before {
@@ -36,6 +39,10 @@ pub fn get_css<'a>() -> &'a str {
     top: 50%;
     left: 1rem;
     transform: translateY(-50%);
+}
+
+.jinya-toast--open {
+    left: 0;
 }
 
 .jinya-toast--primary {
@@ -86,11 +93,14 @@ fn toast(message: String, toast_type: ToastType) {
         }).unwrap();
 
         container.unwrap().unwrap().append_child(&toast).unwrap();
-        toast.class_list().add_1("jinya-toast--open").unwrap();
+        Timeout::new(1, move || {
+            toast.class_list().add_1("jinya-toast--open").unwrap();
 
-        Timeout::new(5_000, move || {
-            toast.remove();
+            Timeout::new(5_000, move || {
+                toast.remove();
+            }).forget();
         }).forget();
+
     }
 }
 
