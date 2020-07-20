@@ -105,6 +105,7 @@ h3 {
         layout::form::get_css(),
         layout::page::get_css(),
         layout::row::get_css(),
+        layout::split_view::get_css(),
         listing::card::card::get_css(),
         listing::card::card_button::get_css(),
         listing::card::card_button_row::get_css(),
