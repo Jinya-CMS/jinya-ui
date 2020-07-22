@@ -3,6 +3,9 @@ name = "jinya-ui"
 version = "1.0.0"
 authors = ["Imanuel Ulbricht <imanuel.ulbricht@jinya.de"]
 edition = "2018"
+license = "MIT"
+description = "Jinya UI is a modern UI library for the yew framework"
+repository = "https://github.com/Jinya-CMS/jinya-ui"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
