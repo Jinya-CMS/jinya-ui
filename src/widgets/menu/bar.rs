@@ -71,7 +71,7 @@ pub enum Msg {
 pub struct MenuBar {
     link: ComponentLink<Self>,
     children: Children,
-    title: &'static str,
+    title: String,
     search_placeholder: Option<String>,
     search_text: String,
     on_search: Callback<String>,
@@ -81,7 +81,7 @@ pub struct MenuBar {
 #[derive(Clone, PartialEq, Properties)]
 pub struct MenuBarProps {
     pub children: Children,
-    pub title: &'static str,
+    pub title: String,
     #[prop_or(None)]
     pub search_placeholder: Option<String>,
     #[prop_or_default]
@@ -134,7 +134,7 @@ impl Component for MenuBar {
     fn view(&self) -> Html {
         html! {
             <div class="jinya-menu">
-                <span class="jinya-menu__title">{self.title}</span>
+                <span class="jinya-menu__title">{&self.title}</span>
                 <ul class="jinya-menu__items-container">
                     {for self.children.iter().enumerate().map(|(_, mut item)| {
                         item

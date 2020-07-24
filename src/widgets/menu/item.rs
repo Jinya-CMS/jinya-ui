@@ -70,7 +70,7 @@ pub fn get_css<'a>() -> &'a str {
 
 #[derive(Clone, PartialEq, Properties)]
 pub struct SubItem<RouteType: Switch + Clone + 'static> {
-    pub label: &'static str,
+    pub label: String,
     #[prop_or_default]
     pub route: Option<&'static RouteType>,
     #[prop_or_default]
@@ -79,20 +79,20 @@ pub struct SubItem<RouteType: Switch + Clone + 'static> {
 
 #[derive(Clone, PartialEq, Properties)]
 pub struct SubItemGroup<RouteType: Switch + Clone + 'static> {
-    pub title: &'static str,
+    pub title: String,
     pub items: Vec<SubItem<RouteType>>,
 }
 
 #[derive(Clone, PartialEq, Properties)]
 pub struct MenuItem<RouteType: Switch + Clone + 'static> {
-    pub label: &'static str,
+    pub label: String,
     pub groups: Vec<SubItemGroup<RouteType>>,
 }
 
 #[derive(Clone, PartialEq, Properties)]
 pub struct MenuItemProps<RouteType: Switch + Clone + 'static> {
     pub groups: Vec<SubItemGroup<RouteType>>,
-    pub label: &'static str,
+    pub label: String,
 }
 
 impl<RouteType: Switch + Clone + 'static> Component for MenuItem<RouteType> {
@@ -119,20 +119,20 @@ impl<RouteType: Switch + Clone + 'static> Component for MenuItem<RouteType> {
     fn view(&self) -> Html {
         html! {
             <li href="#" class="jinya-menu__item">
-                {self.label}
+                {&self.label}
                 <div class="jinya-menu__flyout">
                     {for self.groups.iter().enumerate().map(|(_, mut group)| {
                         html! {
                             <div class="jinya-menu__group">
-                                <span class="jinya-menu__group-header">{group.title}</span>
+                                <span class="jinya-menu__group-header">{&group.title}</span>
                                 {for group.items.iter().enumerate().map(|(_, mut subitem)| {
                                     if subitem.route.is_some() {
                                         html! {
-                                            <RouterAnchor<RouteType> classes="jinya-menu__subitem" route=subitem.route.unwrap()>{subitem.label}</RouterAnchor<RouteType>>
+                                            <RouterAnchor<RouteType> classes="jinya-menu__subitem" route=subitem.route.unwrap()>{&subitem.label}</RouterAnchor<RouteType>>
                                         }
                                     } else {
                                         html! {
-                                            <a href="#" class="jinya-menu__subitem" onclick=subitem.on_click.as_ref().unwrap()>{subitem.label}</a>
+                                            <a href="#" class="jinya-menu__subitem" onclick=subitem.on_click.as_ref().unwrap()>{&subitem.label}</a>
                                         }
                                     }
                                 })}
