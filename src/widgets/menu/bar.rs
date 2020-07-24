@@ -9,6 +9,7 @@ pub fn get_css<'a>() -> &'a str {
     box-sizing: border-box;
     box-shadow: 0 4px 6px var(--menu-bar-box-shadown);
     display: flex;
+    background: var(--white);
 }
 
 .jinya-menu__title {
