@@ -31,6 +31,8 @@ pub fn get_css<'a>() -> &'a str {
     display: flex;
     position: relative;
     width: 100%;
+    flex: 0 0 100%;
+    flex-flow: row wrap;
 }
 
 .jinya-file-upload__container {
@@ -276,39 +278,41 @@ impl Component for FileUpload {
                     Msg::DragExit
                 })
             >
-                <div class="jinya-file-upload__container">
-                    <label for=id class="jinya-file-upload__label">{&self.label}</label>
-                    <input
-                        id=id
-                        type="file"
-                        disabled=self.disabled
-                        placeholder=self.placeholder
-                        class="jinya-file-upload__input"
-                        multiple=self.multiple
-                        onchange=self.link.callback(move |value| {
-                            let mut result = vec![];
-                            if let ChangeData::Files(files) = value {
-                                let files = js_sys::try_iter(&files)
-                                    .unwrap()
-                                    .unwrap()
-                                    .into_iter()
-                                    .map(|v| File::from(v.unwrap()));
-                                result.extend(files);
-                            }
-                            Msg::Files(result)
-                        })
-                    />
-                    <label for=id class="jinya-file-upload__file-info">
-                        {if self.filename.is_empty() {
-                            &self.placeholder
-                        } else {
-                            &self.filename
-                        }}
+                <div class="jinya-file-upload__color-container">
+                    <div class="jinya-file-upload__container">
+                        <label for=id class="jinya-file-upload__label">{&self.label}</label>
+                        <input
+                            id=id
+                            type="file"
+                            disabled=self.disabled
+                            placeholder=self.placeholder
+                            class="jinya-file-upload__input"
+                            multiple=self.multiple
+                            onchange=self.link.callback(move |value| {
+                                let mut result = vec![];
+                                if let ChangeData::Files(files) = value {
+                                    let files = js_sys::try_iter(&files)
+                                        .unwrap()
+                                        .unwrap()
+                                        .into_iter()
+                                        .map(|v| File::from(v.unwrap()));
+                                    result.extend(files);
+                                }
+                                Msg::Files(result)
+                            })
+                        />
+                        <label for=id class="jinya-file-upload__file-info">
+                            {if self.filename.is_empty() {
+                                &self.placeholder
+                            } else {
+                                &self.filename
+                            }}
+                        </label>
+                    </div>
+                    <label for=id class="jinya-file-upload__button">
+                        <span class="mdi mdi-upload"></span>
                     </label>
                 </div>
-                <label for=id class="jinya-file-upload__button">
-                    <span class="mdi mdi-upload"></span>
-                </label>
                 <span class="jinya-file-upload__validation-message">{&self.validation_message}</span>
             </div>
         }
