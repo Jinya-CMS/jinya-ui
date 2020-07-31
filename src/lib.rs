@@ -98,6 +98,10 @@ h3 {
     font-size: var(--font-size-16);
     line-height: var(--line-height-23);
 }
+
+a {
+    color: var(--primary-color);
+}
 ";
     let css = vec![
         root_css,
