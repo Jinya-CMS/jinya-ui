@@ -4,6 +4,10 @@ use yew::{Callback, Component, ComponentLink, Html};
 pub fn get_css<'a>() -> &'a str {
     // language=CSS
     "
+.jinya-input__color-container {
+    width: 100%;
+}
+
 .jinya-input__color-container--default {
     --state-color: var(--primary-color);
 }
@@ -123,14 +127,20 @@ impl Default for InputState {
 impl Input {
     fn get_input_container_class(&self) -> String {
         let class = match self.state {
-            InputState::Default => "jinya-input__color-container--default",
-            InputState::Negative => "jinya-input__color-container--negative",
-            InputState::Positive => "jinya-input__color-container--positive",
+            InputState::Default => {
+                "jinya-input__color-container jinya-input__color-container--default"
+            }
+            InputState::Negative => {
+                "jinya-input__color-container jinya-input__color-container--negative"
+            }
+            InputState::Positive => {
+                "jinya-input__color-container jinya-input__color-container--positive"
+            }
         }
         .to_string();
 
         if self.disabled {
-            "jinya-input__color-container--disabled".to_string()
+            "jinya-input__color-container jinya-input__color-container--disabled".to_string()
         } else {
             class
         }

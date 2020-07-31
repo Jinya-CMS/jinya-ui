@@ -1,5 +1,5 @@
-use yew::{Callback, Children};
 use yew::prelude::*;
+use yew::{Callback, Children};
 
 use crate::widgets::button::*;
 
@@ -16,6 +16,7 @@ pub fn get_css<'a>() -> &'a str {
     opacity: 0;
     display: none;
     transition: opacity 0.3s;
+    z-index: 1;
 }
 
 .jinya-dialog__backdrop--open {
@@ -35,6 +36,7 @@ pub fn get_css<'a>() -> &'a str {
     transform: translate(-50%, -50%);
     background: var(--white);
     width: 40rem;
+    z-index: 1;
 }
 
 .jinya-dialog--open {
@@ -123,7 +125,7 @@ impl Component for Dialog {
     fn update(&mut self, msg: Self::Message) -> bool {
         match msg {
             Msg::Primary => self.on_primary.emit(()),
-            Msg::Secondary => self.on_secondary.emit(())
+            Msg::Secondary => self.on_secondary.emit(()),
         }
 
         false

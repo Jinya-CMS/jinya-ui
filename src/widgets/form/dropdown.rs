@@ -4,6 +4,10 @@ use yew::{Callback, Component, ComponentLink, Html};
 pub fn get_css<'a>() -> &'a str {
     // language=CSS
     "
+.jinya-dropdown__color-container {
+    width: 100%;
+}
+
 .jinya-dropdown__color-container--default {
     --state-color: var(--primary-color);
     --select-arrow: var(--background-image-select-primary);
@@ -141,14 +145,20 @@ impl Default for DropdownState {
 impl Dropdown {
     fn get_dropdown_container_class(&self) -> String {
         let class = match self.state {
-            DropdownState::Default => "jinya-dropdown__color-container--default",
-            DropdownState::Negative => "jinya-dropdown__color-container--negative",
-            DropdownState::Positive => "jinya-dropdown__color-container--positive",
+            DropdownState::Default => {
+                "jinya-dropdown__color-container jinya-dropdown__color-container--default"
+            }
+            DropdownState::Negative => {
+                "jinya-dropdown__color-container jinya-dropdown__color-container--negative"
+            }
+            DropdownState::Positive => {
+                "jinya-dropdown__color-container jinya-dropdown__color-container--positive"
+            }
         }
         .to_string();
 
         if self.disabled {
-            "jinya-dropdown__color-container--disabled".to_string()
+            "jinya-dropdown__color-container jinya-dropdown__color-container--disabled".to_string()
         } else {
             class
         }

@@ -1,6 +1,6 @@
-use yew::{Callback, Component, ComponentLink, Html};
 use yew::prelude::*;
 use yew::services::reader::File;
+use yew::{Callback, Component, ComponentLink, Html};
 
 pub fn get_css<'a>() -> &'a str {
     // language=CSS
@@ -30,6 +30,7 @@ pub fn get_css<'a>() -> &'a str {
 .jinya-file-upload__color-container {
     display: flex;
     position: relative;
+    width: 100%;
 }
 
 .jinya-file-upload__container {
@@ -157,7 +158,8 @@ impl Default for FileUploadState {
 impl FileUpload {
     fn get_input_container_class(&self) -> String {
         let class = if self.disabled {
-            "jinya-file-upload__color-container jinya-file-upload__color-container--disabled".to_string()
+            "jinya-file-upload__color-container jinya-file-upload__color-container--disabled"
+                .to_string()
         } else {
             match self.state {
                 FileUploadState::Default => "jinya-file-upload__color-container jinya-file-upload__color-container--default",
@@ -199,7 +201,11 @@ impl Component for FileUpload {
                 self.on_select.emit(value.clone());
                 if value.len() > 0 {
                     self.filename = if self.multiple {
-                        let name = value.iter().map(|file| file.name()).collect::<Vec<String>>().join(", ");
+                        let name = value
+                            .iter()
+                            .map(|file| file.name())
+                            .collect::<Vec<String>>()
+                            .join(", ");
                         name
                     } else {
                         value.first().unwrap().name()
@@ -211,11 +217,19 @@ impl Component for FileUpload {
                 event.prevent_default();
                 event.stop_propagation();
                 let data_transfer = event.data_transfer().unwrap();
-                let files: Vec<File> = js_sys::try_iter(&data_transfer.files().unwrap()).unwrap().unwrap().map(|v| File::from(v.unwrap())).collect();
+                let files: Vec<File> = js_sys::try_iter(&data_transfer.files().unwrap())
+                    .unwrap()
+                    .unwrap()
+                    .map(|v| File::from(v.unwrap()))
+                    .collect();
                 if files.len() > 0 {
                     self.on_select.emit(files.clone());
                     self.filename = if self.multiple {
-                        let name = files.iter().map(|file| file.name()).collect::<Vec<String>>().join(", ");
+                        let name = files
+                            .iter()
+                            .map(|file| file.name())
+                            .collect::<Vec<String>>()
+                            .join(", ");
                         name
                     } else {
                         files.first().unwrap().name()

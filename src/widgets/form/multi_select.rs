@@ -7,6 +7,10 @@ use yew::{Callback, Component, ComponentLink, Html};
 pub fn get_css<'a>() -> &'a str {
     // language=CSS
     "
+.jinya-multi-select__color-container {
+    width: 100%;
+}
+
 .jinya-multi-select__color-container--default {
     --state-color: var(--primary-color);
 }
@@ -405,14 +409,21 @@ impl MultiSelect {
 
     fn get_multi_select_container_class(&self) -> String {
         let class = match self.state {
-            MultiSelectState::Default => "jinya-multi-select__color-container--default",
-            MultiSelectState::Negative => "jinya-multi-select__color-container--negative",
-            MultiSelectState::Positive => "jinya-multi-select__color-container--positive",
+            MultiSelectState::Default => {
+                "jinya-multi-select__color-container jinya-multi-select__color-container--default"
+            }
+            MultiSelectState::Negative => {
+                "jinya-multi-select__color-container jinya-multi-select__color-container--negative"
+            }
+            MultiSelectState::Positive => {
+                "jinya-multi-select__color-container jinya-multi-select__color-container--positive"
+            }
         }
         .to_string();
 
         if self.disabled {
-            "jinya-multi-select__color-container--disabled".to_string()
+            "jinya-multi-select__color-container jinya-multi-select__color-container--disabled"
+                .to_string()
         } else {
             class
         }
