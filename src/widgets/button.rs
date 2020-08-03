@@ -51,6 +51,17 @@ pub fn get_css<'a>() -> &'a str {
     --color-one: var(--information-color);
     --color-two: var(--white);
 }
+
+.jinya-button:disabled {
+    --color-one: var(--disabled-border-color);
+    --color-two: var(--white);
+    cursor: not-allowed;
+}
+
+.jinya-button:disabled:hover {
+    background: var(--color-two);
+    color: var(--color-one);
+}
 "
 }
 
@@ -69,6 +80,7 @@ pub struct Button {
     button_type: ButtonType,
     on_click: Callback<()>,
     small: bool,
+    disabled: bool,
 }
 
 #[derive(Clone, PartialEq, Properties)]
@@ -79,6 +91,8 @@ pub struct ButtonProps {
     pub on_click: Callback<()>,
     #[prop_or(false)]
     pub small: bool,
+    #[prop_or(false)]
+    pub disabled: bool,
 }
 
 pub enum Msg {
@@ -120,6 +134,7 @@ impl Component for Button {
             on_click: props.on_click,
             button_type: props.button_type,
             small: props.small,
+            disabled: props.disabled,
         }
     }
 
@@ -138,13 +153,14 @@ impl Component for Button {
         self.on_click = _props.on_click;
         self.button_type = _props.button_type;
         self.small = _props.small;
+        self.disabled = _props.disabled;
 
         true
     }
 
     fn view(&self) -> Html {
         html! {
-            <button onclick=self.link.callback(|_| Msg::Click) class=self.get_button_type_class()>
+            <button disabled=self.disabled onclick=self.link.callback(|_| Msg::Click) class=self.get_button_type_class()>
                 {&self.label}
             </button>
         }

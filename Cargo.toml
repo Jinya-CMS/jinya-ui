@@ -1,6 +1,6 @@
 [package]
 name = "jinya-ui"
-version = "1.0.5"
+version = "1.0.8"
 authors = ["Imanuel Ulbricht <imanuel.ulbricht@jinya.de"]
 edition = "2018"
 license = "MIT"
