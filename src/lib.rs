@@ -126,6 +126,8 @@ a {
         widgets::form::dropdown::get_css(),
         widgets::form::multi_select::get_css(),
         widgets::form::file_upload::get_css(),
+        widgets::form::label::get_css(),
+        widgets::form::textarea::get_css(),
         widgets::menu::bar::get_css(),
         widgets::menu::item::get_css(),
         widgets::toast::get_css(),

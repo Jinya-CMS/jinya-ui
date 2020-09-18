@@ -1,9 +1,13 @@
-use yew::{Callback, Component, ComponentLink, Html};
 use yew::prelude::*;
+use yew::{Callback, Component, ComponentLink, Html};
 
 pub fn get_css<'a>() -> &'a str {
     // language=CSS
     "
+.jinya-radio__color-container {
+    flex: 0 0 100%;
+}
+
 .jinya-radio__color-container--default {
     --state-color: var(--primary-color);
 }
@@ -133,13 +137,20 @@ impl Default for RadioState {
 impl Radio {
     fn get_radio_container_class(&self) -> String {
         let class = match self.state {
-            RadioState::Default => "jinya-radio__color-container--default",
-            RadioState::Negative => "jinya-radio__color-container--negative",
-            RadioState::Positive => "jinya-radio__color-container--positive",
-        }.to_string();
+            RadioState::Default => {
+                "jinya-radio__color-container jinya-radio__color-container--default"
+            }
+            RadioState::Negative => {
+                "jinya-radio__color-container jinya-radio__color-container--negative"
+            }
+            RadioState::Positive => {
+                "jinya-radio__color-container jinya-radio__color-container--positive"
+            }
+        }
+        .to_string();
 
         if self.disabled {
-            "jinya-radio__color-container--disabled".to_string()
+            "jinya-radio__color-container jinya-radio__color-container--disabled".to_string()
         } else {
             class
         }
