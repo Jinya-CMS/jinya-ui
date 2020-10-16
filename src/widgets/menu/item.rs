@@ -64,6 +64,7 @@ pub fn get_css<'a>() -> &'a str {
     color: var(--white);
     font-weight: var(--font-style-light);
     margin-bottom: 0.5rem;
+    white-space: pre;
 }
 "
 }
