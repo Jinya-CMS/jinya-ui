@@ -7,17 +7,31 @@ pub fn get_css<'a>() -> &'a str {
 .jinya-split-view {
     display: grid;
     width: 100%;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 1fr 2px 1fr;
     grid-gap: 1rem;
     gap: 1rem;
+    padding: 0.5rem;
 }
 
 .jinya-split-view__left {
     grid-column: 1;
+    max-height: calc(100vh - 9rem + var(--line-height-23));
+    overflow-y: auto;
+}
+
+.jinya-split-view__middle-bar {
+    background: var(--primary-color);
+    height: calc(100vh - 9rem + var(--line-height-23));
+    display: block;
+    width: 2px;
+    grid-column: 2;
 }
 
 .jinya-split-view__right {
-    grid-column: 2;
+    grid-column: 3;
+    max-height: calc(100vh - 9rem + var(--line-height-23));
+    overflow-y: auto;
+    padding: 0.5rem;
 }
 "
 }
@@ -61,6 +75,7 @@ impl Component for SplitView {
                 <div class="jinya-split-view__left">
                     {self.get_left()}
                 </div>
+                <div class="jinya-split-view__middle-bar"/>
                 <div class="jinya-split-view__right">
                     {self.get_right()}
                 </div>

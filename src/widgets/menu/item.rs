@@ -25,7 +25,7 @@ pub fn get_css<'a>() -> &'a str {
     grid-gap: 1rem;
     transform: translateX(-50%);
     left: 50%;
-    z-index: 1;
+    z-index: 2;
 }
 
 .jinya-menu__flyout::before {

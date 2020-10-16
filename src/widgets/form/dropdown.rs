@@ -113,6 +113,7 @@ pub struct Dropdown {
     items: Vec<DropdownItem>,
     placeholder: Option<String>,
     disabled: bool,
+    value: String,
 }
 
 #[derive(Clone, PartialEq, Properties)]
@@ -130,6 +131,7 @@ pub struct DropdownProps {
     pub placeholder: Option<String>,
     #[prop_or(false)]
     pub disabled: bool,
+    pub value: String,
 }
 
 pub enum Msg {
@@ -180,6 +182,7 @@ impl Component for Dropdown {
             validation_message: props.validation_message,
             items: props.items,
             disabled: props.disabled,
+            value: props.value,
         }
     }
 
@@ -206,6 +209,7 @@ impl Component for Dropdown {
         self.dropdown_type = _props.dropdown_type;
         self.items = _props.items;
         self.disabled = _props.disabled;
+        self.value = _props.value;
 
         true
     }
@@ -226,7 +230,7 @@ impl Component for Dropdown {
                     }}
                     {for self.items.iter().map(|mut item| {
                         html! {
-                            <option value=&item.value>{&item.text}</option>
+                            <option value=&item.value selected={self.value == item.value}>{&item.text}</option>
                         }
                     })}
                     </select>
