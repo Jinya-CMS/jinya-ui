@@ -1,5 +1,5 @@
-use yew::{Callback, Component, ComponentLink, Html};
 use yew::prelude::*;
+use yew::{Callback, Component, ComponentLink, Html};
 
 use crate::widgets::button::ButtonType;
 
@@ -17,6 +17,7 @@ pub fn get_css<'a>() -> &'a str {
     justify-content: center;
     align-items: center;
     font-size: var(--font-size-24);
+    cursor: pointer;
 }
 
 .jinya-card__button:first-child {
@@ -97,7 +98,7 @@ impl Component for CardButton {
 
     fn update(&mut self, msg: Self::Message) -> bool {
         match msg {
-            Msg::Click => self.on_click.emit(())
+            Msg::Click => self.on_click.emit(()),
         }
 
         false
