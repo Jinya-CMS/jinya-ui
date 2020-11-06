@@ -201,14 +201,13 @@ impl Component for FileUpload {
         match msg {
             Msg::Files(value) => {
                 self.on_select.emit(value.clone());
-                if value.len() > 0 {
+                if !value.is_empty() {
                     self.filename = if self.multiple {
-                        let name = value
+                        value
                             .iter()
                             .map(|file| file.name())
                             .collect::<Vec<String>>()
-                            .join(", ");
-                        name
+                            .join(", ")
                     } else {
                         value.first().unwrap().name()
                     }
@@ -224,15 +223,14 @@ impl Component for FileUpload {
                     .unwrap()
                     .map(|v| File::from(v.unwrap()))
                     .collect();
-                if files.len() > 0 {
+                if !files.is_empty() {
                     self.on_select.emit(files.clone());
                     self.filename = if self.multiple {
-                        let name = files
+                        files
                             .iter()
                             .map(|file| file.name())
                             .collect::<Vec<String>>()
-                            .join(", ");
-                        name
+                            .join(", ")
                     } else {
                         files.first().unwrap().name()
                     }

@@ -133,7 +133,7 @@ impl Component for TabControl {
 }
 
 impl TabControl {
-    fn get_page_class(&self, name: &String) -> String {
+    fn get_page_class(&self, name: &str) -> String {
         if name.eq(&self.active_page_name) {
             "jinya-tab__page jinya-tab__page--active".to_string()
         } else {
@@ -141,7 +141,7 @@ impl TabControl {
         }
     }
 
-    fn get_link_class(&self, name: &String) -> String {
+    fn get_link_class(&self, name: &str) -> String {
         if name.eq(&self.active_page_name) {
             "jinya-tab__link jinya-tab__link--active".to_string()
         } else {

@@ -79,8 +79,7 @@ enum ToastType {
 }
 
 fn toast(message: String, toast_type: ToastType) {
-    let container = document().query_selector(".jinya-toast__container");
-    if container.is_ok() {
+    if let Ok(container) = document().query_selector(".jinya-toast__container") {
         let toast = document().create_element("div").unwrap();
         toast.set_inner_html(message.as_str());
         toast.class_list().add_1("jinya-toast").unwrap();
@@ -95,7 +94,7 @@ fn toast(message: String, toast_type: ToastType) {
             })
             .unwrap();
 
-        container.unwrap().unwrap().append_child(&toast).unwrap();
+        container.unwrap().append_child(&toast).unwrap();
         Timeout::new(1, move || {
             toast.class_list().add_1("jinya-toast--open").unwrap();
 

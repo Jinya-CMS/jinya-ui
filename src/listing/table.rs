@@ -66,15 +66,15 @@ pub struct TableRow {
 
 impl TableRow {
     pub fn new(cells: Vec<TableCell>) -> TableRow {
-        TableRow {
-            cells,
-        }
+        TableRow { cells }
     }
 
     pub fn remove_cell(&mut self, key: &str) {
-        let idx = self.cells.binary_search_by(|item| item.key.cmp(&key.to_string()));
-        if idx.is_ok() {
-            self.cells.remove(idx.unwrap());
+        let idx = self
+            .cells
+            .binary_search_by(|item| item.key.cmp(&key.to_string()));
+        if let Ok(index) = idx {
+            self.cells.remove(index);
         }
     }
 
@@ -117,9 +117,7 @@ impl Component for Table {
 
     fn update(&mut self, msg: Self::Message) -> bool {
         match msg {
-            Msg::Select(idx) => {
-                self.on_select.emit(idx)
-            }
+            Msg::Select(idx) => self.on_select.emit(idx),
         }
 
         true
@@ -172,7 +170,7 @@ impl Table {
             }
         }
 
-        return "".to_string();
+        "".to_string()
     }
 
     fn get_tr_class(&self, idx: usize) -> String {
