@@ -13,7 +13,7 @@ spec:
     - name: dev-imanuel-jenkins-regcred
   containers:
   - name: rust
-    image: registry.imanuel.dev/rust:latest
+    image: registry.imanuel.dev/library/rust:latest
     command:
     - sleep
     args:
