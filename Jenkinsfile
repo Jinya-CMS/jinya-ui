@@ -26,10 +26,12 @@ spec:
         stage('Lint code') {
             steps {
                 sh 'rustup component add clippy'
-                try {
-                    clippyOut = sh returnStdout: true, script: 'cargo clippy -- -D warnings'
-                } catch (Exception e) {
-                    mail bcc: '', body: 'The build of Jinya UI contains errors, please check.\r\n' + e.toString(), cc: '', from: 'noreply@imanuel.dev', replyTo: '', subject: '[jinya-ui] Errors in clippy check', to: 'developers@jinya.de'
+                script {
+                    try {
+                        clippyOut = sh returnStdout: true, script: 'cargo clippy -- -D warnings'
+                    } catch (Exception e) {
+                        mail bcc: '', body: 'The build of Jinya UI contains errors, please check.\r\n' + e.toString(), cc: '', from: 'noreply@imanuel.dev', replyTo: '', subject: '[jinya-ui] Errors in clippy check', to: 'developers@jinya.de'
+                    }
                 }
             }
         }
